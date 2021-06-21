@@ -27,7 +27,7 @@ class App extends React.Component {
                 this.setState({advice : currentAdvice , think : false});
             }
 
-            console.table(currentAdvice , lastAdvice , this.state.advice);
+            
         })
         .catch((error)=>{
             console.log(error);
