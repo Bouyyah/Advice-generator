@@ -4,9 +4,9 @@ import axios from 'axios';
 
 class App extends React.Component {
     
-    state = { advice : ''  };
-    lastAdvice = 'lastAdvice';  
-    currentAdvice = 'currentAdvice';
+    state = { advice : '' , think : false };
+    
+ 
 
     componentDidMount(){
         this.fetchAdvice();
@@ -16,11 +16,18 @@ class App extends React.Component {
 
         axios.get('https://api.adviceslip.com/advice')
         .then(response => {       
-            this.lastAdvice = this.currentAdvice;    
-            this.currentAdvice = response.data.slip.advice;    
-            this.setState({advice : this.currentAdvice});
-            console.log("current :" + this.currentAdvice , "/n Last :" +this.lastAdvice );
-            if (this.currentAdvice === this.lastAdvice){this.fetchAdvice()}; 
+            const lastAdvice = this.state.advice;     
+            const currentAdvice = response.data.slip.advice;    
+            
+            if (currentAdvice === lastAdvice){
+                this.fetchAdvice();
+                this.setState({think : true});
+                
+            } else {
+                this.setState({advice : currentAdvice , think : false});
+            }
+
+            console.table(currentAdvice , lastAdvice , this.state.advice);
         })
         .catch((error)=>{
             console.log(error);
@@ -31,7 +38,7 @@ class App extends React.Component {
     }
 
     render(){
-        const {advice} = this.state;
+        const advice = (this.state.think)? 'I am thinking..!' : this.state.advice;
         return (
             <div className="app">
                 <div className="card">
